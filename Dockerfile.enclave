@@ -1,0 +1,15 @@
+FROM amazonlinux:2
+
+# only need Nitro CLI + jq at runtime
+RUN yum install -y aws-nitro-enclaves-cli jq && yum clean all
+
+WORKDIR /opt
+
+# copy in the host-built enclave_main.eif
+COPY enclave_main.eif        /opt/enclave_main.eif
+
+# copy in your entrypoint & make executable
+COPY enclave_entrypoint.sh   /opt/enclave_entrypoint.sh
+RUN chmod +x /opt/enclave_entrypoint.sh
+
+ENTRYPOINT ["/opt/enclave_entrypoint.sh"]

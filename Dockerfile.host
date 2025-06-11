@@ -1,0 +1,22 @@
+FROM amazonlinux:2
+
+# Install build tools, kernel headers, and Go
+RUN yum install -y \
+    gcc \
+    glibc-devel \
+    kernel-headers \
+    golang \
+    && yum clean all
+
+# Enable CGO and set target environment
+ENV CGO_ENABLED=1 \
+    GOOS=linux \
+    GOARCH=amd64
+
+WORKDIR /app
+
+# Copy and build the Go host client
+COPY host_main.go .
+RUN go build -o host_main host_main.go
+
+ENTRYPOINT ["/app/host_main"]

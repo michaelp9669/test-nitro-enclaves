@@ -1,0 +1,9 @@
+
+# builds a tiny image containing your enclave payload
+FROM amazonlinux:2
+
+# copy in the enclave-side binary
+COPY enclave_main /opt/enclave_main
+
+# when run, it just executes the payload
+ENTRYPOINT ["/opt/enclave_main"]
